@@ -23,13 +23,22 @@ export const Link=styled(LinkComponent)`
   }
 `;
 
-export const InputBox = styled("input")`
-    width : "100%",
-    height: "100%",
-    border: "none",
-    outlined: "none",
-    padding: 0 3rem,
-    border-radius: 1.5rem,
-    background-color: ${grayColor},
 
-  `;
+export const InputBox = styled("input")(({ theme }) => ({
+  width: "100%",
+  border: "none",
+  outline: "none",
+  padding: "0.8rem 1.5rem",
+  borderRadius: "1.5rem",
+  backgroundColor: grayColor,
+  fontSize: "1rem",
+  flex: 1,
+  transition: theme.transitions.create(["box-shadow", "background-color"]),
+  "&:focus": {
+    boxShadow: `0 0 0 2px ${theme.palette.primary.main}`,
+    backgroundColor: "#fff",
+  },
+  "&::placeholder": {
+    color: theme.palette.text.secondary,
+  },
+}));

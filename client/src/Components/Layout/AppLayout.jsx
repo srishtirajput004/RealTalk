@@ -12,7 +12,7 @@ const AppLayout = () => (WrappedComponent) => {
       const params=useParams();
       const chatId=params.chatId;
 
-      const handleDeleteChat=(e, _id, groupChat)=>{
+      const handleDeleteChat=(e, _id, groupChat)=> {
         e.preventDefault();
         console.log("Delete Chat",_id,groupChat);
       }
