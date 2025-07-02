@@ -8,6 +8,9 @@ import {Link} from "../Components/Styles/StyledComponents"
 import AvatarCard from '../Components/shared/AvatarCard'
 import {sampleChats} from "../constants/sampleData"
 const ConfirmDeleteDialog=lazy(()=>import("../Components/dialogs/ConfirmDeleteDialog"))
+const AddMemberDialog=lazy(()=>import("../Components/dialogs/AddMemberDialog"))
+
+const isAddMember = true;
 
 const Groups = () => {
 
@@ -168,6 +171,12 @@ const Groups = () => {
         </>}
 
       </Grid>
+
+      {
+        isAddMember && ( <Suspense fallback={<Backdrop open/>}>
+          <AddMemberDialog/>
+        </Suspense>
+      )}
 
       {
         confirmDeleteDialog && <Suspense fallback={<Backdrop open/>}>

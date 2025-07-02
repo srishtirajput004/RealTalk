@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dialog, DialogContent, DialogTitle, DialogContentText} from "@mui/material"
+import {Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions,Button} from "@mui/material"
 
 const ConfirmDeleteDialog = ({open,handleClose,deleteHandler}) => {
   return (
@@ -8,6 +8,10 @@ const ConfirmDeleteDialog = ({open,handleClose,deleteHandler}) => {
         <DialogContent>
             <DialogContentText>Are you sure you want to delete this group?</DialogContentText>
         </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>No</Button>
+          <Button onClick={deleteHandler} color='error'>Yes</Button>
+        </DialogActions>
         
    </Dialog>
   )
