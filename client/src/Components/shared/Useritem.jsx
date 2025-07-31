@@ -2,14 +2,14 @@ import React , {memo} from 'react'
 import {Avatar, IconButton, ListItem, Stack, Typography} from "@mui/material"
 import {Add as AddIcon, Remove as RemoveIcon} from "@mui/icons-material"
 
-const Useritem = ({user,handler,handlerIsLoading, isAdded=false}) => {
+const Useritem = ({user,handler,handlerIsLoading, isAdded=false,styling={},}) => {
     const {name,_id,avatar} = user
 
 
 
   return (
     <ListItem>
-        <Stack direction={"row"} spacing={"1rem"} alignItems={"center"} width={"100%"}>
+        <Stack direction={"row"} spacing={"1rem"} alignItems={"center"} width={"100%"} {...styling}>
 
             <Avatar/>
 

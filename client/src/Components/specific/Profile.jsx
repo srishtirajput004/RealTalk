@@ -6,11 +6,11 @@ import moment from "moment"
 
 const Profile = () => {
   return (
-    <Stack spacing={"2rem"} direction={"column"} alignItems={"center"}>
+    <Stack spacing={"2rem"} direction={"column"} alignItems={"center"} sx={{height:'100%'}}>
         <Avatar sx={{
             width: 200,
             height: 200,
-            objective: "contain",
+            objectFit: "contain",
             marginBottom:"1rem",
             border:"5px solid white",
         }}/>
