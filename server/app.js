@@ -1,11 +1,14 @@
 import express from "express"
 import {connectDB} from "./utils/features.js"
 import dotenv from "dotenv"
-import { errorMiddleware } from "./middlewares/error.js";
+import { errorMiddleware } from "./middlewares/error.js"
 import cookieParser from "cookie-parser"
 import {Server} from "socket.io"
 import {createServer} from "http"
 import {v4 as uuid} from "uuid"
+import mongoose from "mongoose"
+import cors from "cors"
+
 
 import adminRoute from "./routes/admin.js"
 import userRoute from "./routes/user.js"
@@ -41,24 +44,26 @@ const io=new Server(server,{});
 app.use(express.json());   //".json" to access json data
 // app.use(express.urlencoded());   //".urlencoded" to access form data
 app.use(cookieParser());
+app.use(cors({
+    origin:["http://localhost:5173","http://localhost:4173",process.env.CLIENT_URL,],
+    credentials:true,
+}))
 
-app.use('/user',userRoute);   //'/user' is prefix here
-app.use('/chat',chatRoute); 
-app.use('/admin',adminRoute); 
+app.use('/api/v1/user',userRoute);   //'/user' is prefix here
+app.use('/api/v1/chat',chatRoute); 
+app.use('/api/v1/admin',adminRoute); 
 
 app.get("/",(req,res)=>{
     res.send("hellooooo");
 });
 
 //just like we access middlewares by app.use(), we can also do io.use()
-io.use((socket,next)=>{
-    
-});
+io.use((socket,next)=>{ next(); })
 
 io.on("connection",(socket)=>{
 
     const user={
-        _id:"asdfgyu",
+        _id:new mongoose.Types.ObjectId(),
         name:"sona",
     };
     userSocketIDs.set(user._id.toString(),socket.id);
@@ -76,6 +81,8 @@ io.on("connection",(socket)=>{
             chat:chatId,
             createdAt: new Date().toISOString(),
         };
+
+         console.log("Received message:", messageForRealTime); 
 
         const messageForDB={
             content:message,
@@ -114,4 +121,4 @@ server.listen(port,()=>{
 export{
     adminSecretKey,
     userSocketIDs,
-}
+} 
