@@ -8,7 +8,7 @@ import {createServer} from "http"
 import {v4 as uuid} from "uuid"
 import mongoose from "mongoose"
 import cors from "cors"
-
+import {v2 as cloudinary} from "cloudinary"
 
 import adminRoute from "./routes/admin.js"
 import userRoute from "./routes/user.js"
@@ -35,6 +35,12 @@ connectDB(mongoURI);
 // createSingleChats(10);
 // createGroupChats(10);
 // createMessagesInAChat("6890f570e444210c6961a7ff",50); 
+
+cloudinary.config({
+    cloud_name:process.env.CLOUDINARY_CLOUD_NAME,
+    api_key:process.env.CLOUDINARY_API_KEY,
+    api_secret:process.env.CLOUDINARY_API_SECRET,
+});
 
 const app=express();
 const server=createServer(app);

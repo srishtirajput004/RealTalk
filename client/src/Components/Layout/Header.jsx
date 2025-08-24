@@ -4,6 +4,11 @@ import {orange} from '../../constants/color'
 import {Add as AddIcon, Menu as MenuIcon, Search as SearchIcon, 
   Group as GroupIcon, Logout as LogoutIcon ,Notifications as NotificationsIcon} from "@mui/icons-material"
 import {useNavigate} from "react-router-dom"
+import axios from 'axios'
+import { server } from '../../constants/config'
+import toast from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import { userNotExists } from '../../redux/reducers/auth'
 const SearchDialog=lazy(()=> import("../specific/Search"));
 const NotificationsDialog=lazy(()=> import("../specific/Notifications"));
 const NewGroupDialog=lazy(()=> import("../specific/NewGroup"));
@@ -12,6 +17,7 @@ const NewGroupDialog=lazy(()=> import("../specific/NewGroup"));
 const Header = () => {
 
   const navigate=useNavigate();
+  const dispatch=useDispatch();
   const [isMobile,setIsMobile]=useState(false);
   const [isSearch,setIsSearch]=useState(false);
   const [isNewGroup,setIsNewGroup]=useState(false);
@@ -30,9 +36,16 @@ const Header = () => {
      setIsNotification(prev=>!prev);
   }
 
-  const navigateToGroup=()=>navigate("/groups")
-  const logoutHandler=()=>{
-    console.log("Logout");
+  const navigateToGroup=()=>navigate("/groups");
+
+  const logoutHandler=async()=>{
+    try {
+      const {data}=await axios.get(`${server}/api/v1/user/logout`,{withCredentials:true});
+      dispatch(userNotExists());
+      toast.success(data.message);
+    } catch (error) {
+        toast.error(error?.response?.data?.message || "Something went wrong");
+    }
   }
 
   return (

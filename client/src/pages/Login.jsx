@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
-import { Container,Paper,TextField,Typography,Button,Stack,Avatar,IconButton,} from '@mui/material';
-import { CameraAlt as CameraAltIcon } from '@mui/icons-material';
-import { VisuallyHiddenInput } from '../Components/Styles/StyledComponents';
 import { useFileHandler, useInputValidation } from '6pp';
+import { CameraAlt as CameraAltIcon } from '@mui/icons-material';
+import { Avatar, Button, Container, IconButton, Paper, Stack, TextField, Typography, } from '@mui/material';
+import axios from "axios";
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useDispatch } from "react-redux";
+import { VisuallyHiddenInput } from '../Components/Styles/StyledComponents';
+import { orange } from "../constants/color";
+import { server } from "../constants/config";
+import { userExists } from "../redux/reducers/auth";
 import { usernameValidator } from '../utils/Validators';
-import {orange} from "../constants/color"
 // import { useStrongPassword } from '6pp';
 
 const Login = () => {
@@ -18,12 +23,64 @@ const Login = () => {
   // const password = useStrongPassword();
   const avatar = useFileHandler('single');
 
-  const handleLogin = (e) => {
+  const dispatch=useDispatch();
+
+  const handleLogin = async(e) => {
     e.preventDefault();
+
+    const config={
+      withCredentials:true,
+      headers:{
+        'Content-Type':'application/json',
+      },
+    };
+
+    try {
+      const {data}=await axios.post(
+      `${server}/api/v1/user/login`,
+      {
+      username:username.value,
+      password:password.value,
+      },
+    config
+  );
+  dispatch(userExists(true))
+  toast.success(data.message);
+
+  } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+
   };
 
-  const handleSignup = (e) => {
+  const handleSignup = async(e) => {
     e.preventDefault();
+
+    const formData=new FormData();
+    formData.append("avatar",avatar.file);
+    formData.append("name",name.value);
+    formData.append("bio",bio.value);
+    formData.append("username",username.value);
+    formData.append("password",password.value);
+
+    const config={
+          withCredentials:true,
+          headers:{
+            "Content-Type":"multipart/form-data",
+          }
+        };
+
+    try {
+      const {data}=await axios.post(
+        `${server}/api/v1/user/new`,
+        formData,
+        config
+      );
+      dispatch(userExists(true));
+      toast.success(data.message);
+    } catch (error) {
+        toast.error(error?.response?.data?.message || "Something went wrong");
+    }
   };
 
   return (
@@ -172,7 +229,8 @@ const Login = () => {
                 variant="outlined"
                 value={username.value}
                 onChange={username.changeHandler}
-                error={username.error}
+                error={!!username.error}
+                helperText={username.error || ""} 
               />
               {username.error && (
                 <Typography color="error" variant="caption">
